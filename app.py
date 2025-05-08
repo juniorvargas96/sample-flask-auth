@@ -1,4 +1,4 @@
-#cd Desktop/AULAS/Rockeseat/Python/modulo_4/sample-flask-auth
+# cd Desktop/AULAS/Rockeseat/Python/modulo_4/sample-flask-auth
 from flask import Flask, request, jsonify
 from models.user import User
 from database import db
@@ -7,7 +7,7 @@ import bcrypt
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "your_secret_key"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:admin123@127.0.0.1:3306/flask-crud' # Caminho do banco de dados
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:admin123@127.0.0.1:3306/flask-crud'  # Caminho do banco de dados
 
 login_manager = LoginManager()
 db.init_app(app)
@@ -16,18 +16,14 @@ login_manager.init_app(app)
 # Define a rota para onde o usuário será redirecionado se não estiver autenticado
 login_manager.login_view = 'login'
 
-""" 
-Associa a função ao carregamento de usuário via ID da sessão.
-Utilizado internamente pelo Flask-Login para recuperar o usuário atual.
-"""
+# Associa a função ao carregamento de usuário via ID da sessão.
+# Utilizado internamente pelo Flask-Login para recuperar o usuário atual.
 @login_manager.user_loader
 def load_user(user_id):
   return User.query.get(user_id)
 
-""" 
-Define a rota /login e permite apenas requisições POST.
-Usada para autenticar o usuário e iniciar uma sessão.
-"""
+# Define a rota /login e permite apenas requisições POST.
+# Usada para autenticar o usuário e iniciar uma sessão.
 @app.route('/login', methods=["POST"])
 def login():
   data = request.json
@@ -44,20 +40,16 @@ def login():
   
   return jsonify({"message": "Credenciais inválidas"}), 400
 
-""" 
-Define a rota /logout e exige que o usuário esteja autenticado.
-Finaliza a sessão do usuário atual.
-"""
+# Define a rota /logout e exige que o usuário esteja autenticado.
+# Finaliza a sessão do usuário atual.
 @app.route('/logout', methods=["GET"])
 @login_required
 def logout():
   logout_user()
   return jsonify({"message": "Logout realizado com sucesso!"})
 
-""" 
-Define a rota /user com método POST.
-Cria um novo usuário no banco de dados com senha criptografada.
-"""
+# Define a rota /user com método POST.
+# Cria um novo usuário no banco de dados com senha criptografada.
 @app.route('/user', methods=['POST'])
 def create_user():
   data = request.json
@@ -73,11 +65,9 @@ def create_user():
   
   return jsonify({"message": "Dados invalido"}), 400
 
-""" 
-Define a rota /user/<id_user> com método GET.
-Retorna o nome de usuário com base no ID informado.
-Exige autenticação.
-"""
+# Define a rota /user/<id_user> com método GET.
+# Retorna o nome de usuário com base no ID informado.
+# Exige autenticação.
 @app.route('/user/<int:id_user>', methods=['GET'])
 @login_required
 def read_user(id_user):
@@ -88,11 +78,9 @@ def read_user(id_user):
   
   return jsonify({"message": "Usuario não encontrado"}), 404
 
-""" 
-Define a rota /user/<id_user> com método PUT.
-Permite atualizar a senha do usuário. Exige autenticação.
-Impede que usuários comuns atualizem outros usuários.
-"""
+# Define a rota /user/<id_user> com método PUT.
+# Permite atualizar a senha do usuário. Exige autenticação.
+# Impede que usuários comuns atualizem outros usuários.
 @app.route('/user/<int:id_user>', methods=['PUT'])
 @login_required
 def update_user(id_user):
@@ -110,11 +98,9 @@ def update_user(id_user):
   
   return jsonify({"message": "Usuario não encontrado"}), 404
 
-""" 
-Define a rota /user/<id_user> com método DELETE.
-Permite apenas que administradores deletem outros usuários,
-exceto a si mesmos.
-"""
+# Define a rota /user/<id_user> com método DELETE.
+# Permite apenas que administradores deletem outros usuários,
+# exceto a si mesmos.
 @app.route('/user/<int:id_user>', methods=['DELETE'])
 @login_required
 def delete_user(id_user):
